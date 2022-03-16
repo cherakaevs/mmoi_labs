@@ -1,4 +1,8 @@
 import sys
+
+import numpy as np
+from skimage.exposure import exposure
+
 import equalization
 import lc
 import thresholding
@@ -42,8 +46,15 @@ def run(mode):
         out_img = lc.linear_contrast(img, img.min(), img.max())
         t = "Линейное контрастирование"
     if mode == "EQUALIZE":
-        out_img = equalization.equalize(img, 0, 255)
+        img = imread(PATH)
         t = "Эквализация гистограмм"
+        out_img = equalization.equalize(img, 0, 255)
+        output(img, out_img, title="Стандартная эквализация")
+        out_img2 = (exposure.equalize_hist(img) * 255).astype(np.uint8)
+        out_h = np.histogram(out_img2, 256, [0, 256])[0]
+        out_h = np.cumsum(out_h) / (img.shape[0] * img.shape[1])
+        plt.plot(out_h)
+        output(img, out_img2, title=t)
 
     output(img, out_img, title=t)
 

@@ -14,6 +14,7 @@ def equalize(img, gmin=0, gmax=255):
     f = ((gmax - gmin) * density + gmin).astype(np.uint8)
     eq = f[img]
     out_h, b = np.histogram(eq, 256, [0, 256])
+    print(out_h, b)
     out_h = np.cumsum(out_h) / (img.shape[0] * img.shape[1])
     plt.plot(out_h)
     return eq
