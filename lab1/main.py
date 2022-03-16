@@ -36,27 +36,25 @@ def output(img, proc_img, title):
 
 def run(mode):
     img = imread(PATH)
-    out_img = ''
-    t = ''
 
     if mode == "THRESHOLD":
         out_img = thresholding.thresholding(img)
         t = "Пороговая обработка"
+        output(img, out_img, title=t)
     if mode == "CONTRAST":
         out_img = lc.linear_contrast(img, img.min(), img.max())
         t = "Линейное контрастирование"
+        output(img, out_img, title=t)
     if mode == "EQUALIZE":
         img = imread(PATH)
         t = "Эквализация гистограмм"
         out_img = equalization.equalize(img, 0, 255)
         output(img, out_img, title="Стандартная эквализация")
-        out_img2 = (exposure.equalize_hist(img) * 255).astype(np.uint8)
-        out_h = np.histogram(out_img2, 256, [0, 256])[0]
+        eq = (exposure.equalize_hist(img) * 255).astype(np.uint8)
+        out_h = np.histogram(eq, 256, [0, 256])[0]
         out_h = np.cumsum(out_h) / (img.shape[0] * img.shape[1])
         plt.plot(out_h)
-        output(img, out_img2, title=t)
-
-    output(img, out_img, title=t)
+        output(img, eq, title=t)
 
 
 if __name__ == "__main__":
